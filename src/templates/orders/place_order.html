@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+	<div class="container">
+		<div class="row">
+			<aside class="col-lg-8">
+				<div class="card">
+                    <h5 class="card-header">Địa chỉ</h5>
+                    <div class="card-body">
+                        <p class="card-text mb-0">{{ order.full_name }}</p>
+                        <p class="card-text mb-0">{{ order.full_address }}</p>
+                        <p class="card-text mb-0">{{ order.phone_number }}</p>
+                        {% if order.notes %}
+                            <b>Order Note: </b> {{ order.notes }}
+                        {% endif %}
+                    </div>
+				</div>
+				<div class="card" style="margin-top: 15px;">
+                    <h5 class="card-header">Đơn hàng</h5>
+                    <div class="card-body">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col" width="120" class="text-center">Số lượng</th>
+                                    <th scope="col" width="120" class="text-center">Đơn giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cart_item in cart_items %}
+                                <tr>
+                                    <td class="align-middle text-center">
+                                        <figure class="itemside align-items-center">
+                                            <div class="aside"><img src="{{ cart_item.item.image.url }}"
+                                                    class="img-sm rounded"></div>
+                                            <figcaption class="info">
+                                                <a href="{{ cart_item.item.get_url }}" class="title text-dark">
+                                                    {{ cart_item.item.name }}</a>
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <label for="">{{cart_item.quantity}}</label>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <div class="price-wrap">
+                                            <var class="price">{{ cart_item.sub_total|intcomma }} đ</var>
+											{% if cart_item.quantity != 1 %}
+                                            <small class="text-muted">{{ cart_item.item.price|intcomma }} đ / suất </small>
+											{% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+				</div>
+			</aside>
+			<!-- col.// -->
+			<aside class="col-lg-4">
+				<div class="card">
+					<div class="card-body">
+						<dl class="dlist-align">
+							<dt>Thành tiền</dt>
+							<dd class="text-right">{{ total|intcomma }} đ</dd>
+						</dl>
+						<dl class="dlist-align">
+							<dt>Thuế</dt>
+							<dd class="text-right">{{ tax|intcomma }} đ</dd>
+						</dl>
+						<dl class="dlist-align">
+							<dt>Tổng cộng</dt>
+							<dd class="text-right text-dark b">
+								<strong>~ ${{ grand_total|intcomma }}</strong>
+							</dd>
+						</dl>
+						<hr />
+						<p class="text-center mb-3">
+							<img src="{% static 'images/payments.png' %}" height="26" />
+						</p>
+						<div id="paypal-button-container"></div>
+						<a href="{% url 'home' %}" class="btn btn-light btn-block">Tiếp tục mua sắm</a>
+					</div>
+				</div>
+			</aside>
+		</div>
+	</div>
+</section>
+
+<script>
+	function getCookie(name) {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+
+	var amount = parseFloat("{{ grand_total }}");
+	var url = "{% url 'transaction' %}";
+	var csrfToken = getCookie('csrftoken');
+	var orderID = "{{ order.invoice_id }}";
+	var paymentMethod = 'PayPal';
+	var redirectUrl = "{% url 'order_completed' %}"
+	
+	// Render the PayPal button into #paypal-button-container
+	paypal.Buttons({
+		style: {
+			layout: 'vertical',
+			color:  'blue',
+			shape:  'rect',
+			label:  'paypal'
+		},
+
+		createOrder: function(data, actions) {
+			return actions.order.create({
+				purchase_units: [{
+					amount: {
+						value: amount
+					}
+				}]
+			});
+		},
+
+		// Finalize the transaction
+		onApprove: function(data, actions) {
+			return actions.order.capture().then(function(details) {
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: {
+						'csrfmiddlewaretoken': "{{ csrf_token }}",
+						'orderID': orderID,
+						'transID': details.id,
+						'payment_method': paymentMethod,
+						'status': details.status,
+					},
+					success: function(response) {
+						data = response.data;
+						// alert('Transaction completed by ' + details.payer.name.given_name + '!');
+						window.location.href = redirectUrl + '?order_number=' + data["order_number"] + '&payment_id=' + data["transID"];
+					},
+					error: function(response) {
+						error = response.error;
+						alert('Transaction completed, but 1 error occurred: ' + e);
+					}
+				});
+			});
+		}
+	}).render('#paypal-button-container');
+</script>
+{% endblock %}

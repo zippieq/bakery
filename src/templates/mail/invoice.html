@@ -1,0 +1,15 @@
+{% autoescape off %}
+
+Cảm ơn quý khách {{ user.full_name }} đã đặt hàng tại The Octo Food.
+
+The Octo Food xin gửi quý khách thông tin đơn hàng #{{ order.invoice_id }}
+
+Thông tin giao hàng
+{{ order.full_name }}
+{{ order.full_address }}
+{{ user.phone_number }}
+
+Thông tin đơn hàng
+http://{{ domain }}/orders/order_completed/?order_number={{ order.invoice_id}}&payment_id={{ trans_id }}
+
+{% endautoescape %}

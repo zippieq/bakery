@@ -1,0 +1,14 @@
+{% autoescape off %}
+Xin chào {{ user.first_name }},
+
+Cảm ơn quý khách đã tin tưởng sử dụng TheOctoFood! Để bắt đầu sử dụng
+dịch vụ, quý khách vui lòng click vào link dưới đây:
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Quý khách sẽ chưa thể sử dụng dịch vụ nếu không xác thực email. Nếu có
+bất kỳ thắc mắc nào, vui lòng trả lời lại email này.
+
+Chào mừng đến với TheOctoFood!
+Team TheOctoFood
+{% endautoescape %}

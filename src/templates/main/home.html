@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-name padding-y-sm">
+    <div class="container">
+        <div class="row">
+            {% for item in categories %}
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="{{ item.get_url }}" class="img-wrap"> <img src="{{ item.image.url }}"> </a>
+                    <figcaption class="info-wrap">
+                        <h5 href="{{ item.get_url }}" class="title">{{ item.name }}</h5>
+                    </figcaption>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

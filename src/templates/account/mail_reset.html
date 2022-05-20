@@ -1,0 +1,6 @@
+{% autoescape off %}
+
+Hãy click vào link dưới đây để thiết lập lại mật khẩu,
+http://{{ domain }}{% url 'reset_password' uidb64=uid token=token %}
+
+{% endautoescape %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="section-content padding-y">
+    <div class="card mx-auto" style="max-width:520px; margin-top:10px;">
+        <article class="card-body">
+            {% include "includes/alerts.html" %}
+            <form action="{% url 'register' %}" method="POST">
+                {% csrf_token %}
+                <!-- First name, last name row -->
+                <div class="form-row">
+                    <div class="col form-group">
+                        {{ form.first_name }}
+                    </div>
+                    <div class="col form-group">
+                        {{ form.last_name }}
+                    </div>
+                </div>
+                <!-- Username row -->
+                <div class="form-group">
+                    {{ form.username }}
+                </div>
+                <!-- Email row -->
+                <div class="form-group">
+                    {{ form.email }}
+                    <small class="form-text text-muted">Bạn sẽ nhận được link xác thực qua email này.</small>
+                </div>
+                <!-- Phone number row -->
+                <div class="form-group">
+                    {{ form.phone_number }}
+                </div>
+                <!-- Password row -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.password }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.confirm_password }}
+                    </div>
+                </div>
+                <!-- Submit row -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Đăng ký </button>
+                </div>
+                {{ form.email.errors }}
+                {{ form.non_field_errors }}
+            </form> 
+        </article>
+    </div>
+    <p class="text-center mt-4">Khách hàng cũ? <a href="{% url 'login' %}">Đăng nhập</a></p>
+</section>
+{% endblock %}

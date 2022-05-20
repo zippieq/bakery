@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+    <h2 class="text-center">Đặt hàng thành công!</h2>
+    <br>
+    <div class="text-center">
+        <a href="{% url 'home' %}" class="btn btn-success">Quay lại trang chủ</a>
+    </div>
+</div>
+
+<div class="container"
+    style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
+    <div class="row invoice row-printable">
+        <div class="col-md-12">
+            <div class="panel panel-default plain" id="dash_0">
+                <div class="panel-body p30">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo"
+                                    style="max-height: 40px;"></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="invoice-from">
+                                <ul class="list-unstyled text-right">
+                                    <li><strong>Thông tin thanh toán</strong></li>
+                                    <li>{{ invoice.full_name }}</li>
+                                    <li>{{ invoice.full_address }}</li>
+                                    <li>{{ invoice.phone_number }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="invoice-details mt25">
+                                <div class="well">
+                                    <ul class="list-unstyled mb0">
+                                        <li><strong>Đơn hàng</strong> #{{ order_number }}</li>
+                                        <li><strong>Transaction ID</strong> {{ transID }}</li>
+                                        <li><strong>Ngày đặt</strong> {{ invoice.created_at }}</li>
+                                        <li><strong>Trạng thái</strong> {{ payment.status }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="invoice-items">
+                                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="per70">Sản phẩm</th>
+                                                <th class="per5 text-center">SL</th>
+                                                <th class="per25 text-right">Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in ordered_products %}
+                                            <tr>
+                                                <td>{{ item.item.name }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td class="text-right">{{ item.price|intcomma }} đ</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Tạm tính</th>
+                                                <th class="text-right">{{ subtotal|intcomma }} đ</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Thuế:</th>
+                                                <th class="text-right">{{ invoice.tax|intcomma }} đ</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Tổng cộng</th>
+                                                <th class="text-right">{{ invoice.total|intcomma }} đ</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="invoice-footer mt25">
+                                <p class="text-center">Cảm ơn quý khách đã tin tưởng sử dụng dịch vụ!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

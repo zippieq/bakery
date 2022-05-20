@@ -1,24 +1,24 @@
 ![the-octo-food](images/banner.jpg)
-# TheOctoFood - Django Food Order Website
-English | [Tiếng Việt](README-vi.md)
+# TheOctoFood - Website đặt đồ ăn sử dụng Django
+[English](README.md) | Tiếng Việt
 
-## Deployment Guides
+## Hướng dẫn triển khai
 
-Clone this repo
+Clone project về máy
 ```
 git clone https://github.com/sownt/TheOctoFood.git && cd TheOctoFood
 ```
-You can deploy this project with docker-compose (recommended) or with Python virtual environment.
+Bạn có thể triển khai project này bằng docker-compose (khuyến khích) hoặc triển khai trực tiếp bằng python
 
-### 1. Deploy with Docker compose (Recommended)
+### 1. Triển khai với Docker compose (Khuyến khích)
 
-#### Requirements:
+#### Yêu cầu hệ thống:
 - Docker engine
 - docker-compose
 
-You can install [Docker Desktop](https://docs.docker.com/desktop/) for Windows/macOS or install [Engine](https://docs.docker.com/engine/) and [compose](https://docs.docker.com/compose/install/) for Linux.
+Bạn có thể cài đặt [Docker Desktop](https://docs.docker.com/desktop/) cho Windows/macOS hoặc cài đặt [Engine](https://docs.docker.com/engine/) và [compose](https://docs.docker.com/compose/install/) cho Linux.
 
-First, create `.env` file at /src/TheOctoFood/ to set environment variables
+Trước tiên bạn cần tạo file `.env` trong thư mục /src/TheOctoFood/ để cài biến môi trường cho project.
 ```
 SECRET_KEY=                                     # Django secret key
 DATABASE_ENGINE=django.db.backends.mysql
@@ -34,35 +34,35 @@ EMAIL_HOST_USER=                                # SMTP username
 EMAIL_HOST_PASSWORD=                            # SMTP password
 EMAIL_PORT=                                     # SMTP port
 ```
-Then run command below and Docker will help you do everything
+Sau đó chạy lệnh dưới để Docker thực hiện các công việc còn lại
 ```
 docker-compose up
 ```
 
-### 2. Deploy with virtual environment
+### 2. Triển khai trực tiếp bằng Python
 
-#### Requirements:
-- MySQL/MariaDB with theoctofood database created
+#### Yêu cầu hệ thống:
+- MySQL/MariaDB với cơ sở dữ liệu theoctofood được tạo sẵn
 
-To create database
+Bạn có thể tạo nó bằng lệnh
 ```
 CREATE DATABASE IF NOT EXISTS `theoctofood` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ```
 
-Create a virtual environment
+Tạo môi trường ảo cho project
 ```
 python -m venv .
 ```
-Activate it
+Kích hoạt môi trường
 ```
 Scripts\activate.bat    # Windows
 source bin/activate     # Linux
 ```
-Install required packages
+Cài đặt các packages của project
 ```
 pip install -r requirements.txt
 ```
-Create `.env` file at `/src/TheOctoFood/` to set environment variables
+Tạo file `.env` trong thư mục /src/TheOctoFood/ để cài biến môi trường cho project.
 ```
 SECRET_KEY=                                     # Django secret key
 DATABASE_ENGINE=django.db.backends.mysql
@@ -78,9 +78,9 @@ EMAIL_HOST_USER=                                # SMTP username
 EMAIL_HOST_PASSWORD=                            # SMTP password
 EMAIL_PORT=                                     # SMTP port
 ```
-You can import sample to database with `/src/TheOctoFood/theoctofood.sql` file
+Bạn có thể nhập dữ liệu mẫu từ file `/src/TheOctoFood/theoctofood.sql` vào database nễu muốn.
 
-Migrate and run
+Cuối cùng là tích hợp và chạy project bằng lệnh dưới đây
 ```
 python manage.py migrate && python manage.py runserver 0.0.0.0:8000
 ```

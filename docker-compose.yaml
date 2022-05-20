@@ -1,0 +1,30 @@
+version: "3.9"
+   
+services:
+  db:
+    image: mariadb
+    volumes:
+      - ./src/TheOctoFood/theoctofood.sql:/docker-entrypoint-initdb.d/theoctofood.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword
+    healthcheck:
+      test: "mysql theoctofood -u root -p$$MYSQL_ROOT_PASSWORD -e 'SELECT 1;'"
+      interval: 5s
+      timeout: 5s
+      retries: 15
+  web:
+    build: .
+    command: sh -c "python src/manage.py collectstatic --noinput && python src/manage.py migrate && python src/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db:3306
