@@ -83,7 +83,7 @@ def transaction(request):
         return JsonResponse({"error": e}, status=400)
 
 
-def place_order(request, total=0, quantity=0,):
+def place_order(request, total=0, quantity=0):
     current_user = request.user
 
     if not current_user.is_authenticated:
@@ -148,7 +148,9 @@ def place_order(request, total=0, quantity=0,):
                 'cart_items': cart_items,
                 'total': total,
                 'tax': tax,
-                'grand_total': round(grand_total / 22715, 2),
+                'grand_total': grand_total,
+
+                # 'grand_total': round(grand_total / 22715, 2),
             }
             return render(request, 'orders/place_order.html', context)
         else:

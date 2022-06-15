@@ -6,10 +6,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password, email, first_name, last_name, phone_number, **extra_fields):
         if not username:
-            raise ValueError('Username must be set')
+            raise ValueError('Đặt tên người dùng')
 
         if not email:
-            raise ValueError('Email must be set')
+            raise ValueError('Hãy đặt email')
 
         email = self.normalize_email(email)
         user = self.model(

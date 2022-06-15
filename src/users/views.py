@@ -42,7 +42,7 @@ class RegistrationForm(forms.ModelForm):
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
         if password != confirm_password:
-            raise forms.ValidationError('Mật khảu không khớp')
+            raise forms.ValidationError('Mật khẩu không khớp')
         return cleaned_data
 
 def register(request):
@@ -62,7 +62,8 @@ def register(request):
                 first_name=first_name, 
                 last_name=last_name, 
                 password=password,
-                phone_number = phone_number
+                phone_number = phone_number,
+                is_active = True
             )
             user.save()
 
@@ -75,7 +76,7 @@ def register(request):
                 'token': default_token_generator.make_token(user)
             })
             send_email = EmailMessage(mail_subject, message, to=[email])
-            send_email.send()
+            # send_email.send()
             messages.success(
                 request=request,
                 message="Vui lòng xác nhận địa chỉ email!"
